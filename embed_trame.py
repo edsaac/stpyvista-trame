@@ -24,7 +24,7 @@ def get_server_ip():
     return ip, port
 
 def launch_trame(path_script: str, ip:str):
-    command = f"""/home/adminuser/venv/bin/python {path_script}"""
+    command = f"""/home/adminuser/venv/bin/python {path_script} --port 12345"""
     args = shlex.split(command)
     p = Popen(args)
 
@@ -43,7 +43,13 @@ def main():
     p = launch_trame("trame_example/solution_cone.py", ip)
     atexit.register(close_trame, p)
 
-    st.components.v1.iframe(f"http://{ip}:1234", height=400)
+    st.components.v1.iframe("http://localhost:12345", height=400)
+    "*****"
+    st.components.v1.html(
+        """
+         <iframe src="http://localhost:12345" title="description"></iframe> 
+        """
+    )
     # trame_component()
 
     if st.button("Reset trame"):
