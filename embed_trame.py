@@ -17,10 +17,7 @@ def get_server_ip():
     s.close()
     return ip, port
 
-def launch_trame(path_script: str):
-    
-    ip, _ = get_server_ip()
-
+def launch_trame(path_script: str, ip:str):
     command = f"/home/adminuser/venv/bin/python {path_script} --port 1234 --host {ip}"
     args = shlex.split(command)
     p = Popen(args)
@@ -36,13 +33,11 @@ def close_trame(p: Popen):
 def main():
 
     st.title("Trame within streamlit")
-
-
-
-    p = launch_trame("trame_example/solution_cone.py")
+    ip, _ = get_server_ip()
+    p = launch_trame("trame_example/solution_cone.py", ip)
     atexit.register(close_trame, p)
 
-    st.components.v1.iframe("http://localhost:1234", height=400)
+    st.components.v1.iframe(f"http://{ip}:1234", height=400)
     # trame_component()
 
 if __name__ == "__main__":
