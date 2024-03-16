@@ -63,4 +63,4 @@ with SinglePageLayout(server) as layout:
 # -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    server.start(open_browser=False, show_connection_info=True, timeout=0)
+    server.start(open_browser=False, show_connection_info=True)
