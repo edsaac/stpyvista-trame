@@ -37,7 +37,7 @@ def close_trame(p: Popen):
 
 
 def main():
-    st.write(show_config())
+    st.code(show_config())
     st.title("Trame within streamlit")
     ip, _ = get_server_ip()
     p = launch_trame("trame_example/solution_cone.py", ip)
