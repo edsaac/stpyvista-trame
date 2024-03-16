@@ -42,7 +42,7 @@ def main():
 
     if st.button("Reset trame"):
         p.terminate()
-        st.rerun(0)
+        st.rerun()
 
 if __name__ == "__main__":
     main()
