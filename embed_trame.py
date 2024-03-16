@@ -7,7 +7,7 @@ from pathlib import Path
 
 CLOUDFARE_PATH = Path("./cloudflared-linux-amd64")
 if not CLOUDFARE_PATH.exists():
-    os.system("wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64")
+    os.system("wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64")
     os.system("chmod +x cloudflared-linux-amd64")
 
 def run_cloudflared():
