@@ -8,7 +8,7 @@ def launch_trame(path_script: str):
     
     global trame_component
     
-    command = f"python {path_script} --port 1234"
+    command = f"/home/adminuser/venv/bin/python {path_script} --port 1234"
     args = shlex.split(command)
     p = Popen(args)
 
