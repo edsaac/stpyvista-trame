@@ -13,7 +13,7 @@ if not CLOUDFARE_PATH.exists():
 def run_cloudflared():
     command = "./cloudflared-linux-amd64 tunnel --url http://localhost:12345"
     args = shlex.split(command)
-    p = Popen(args, stdout=PIPE, stderr=PIPE)
+    p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
     while True:
         line = p.stdout.readline()
