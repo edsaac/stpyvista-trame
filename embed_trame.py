@@ -27,11 +27,12 @@ def close_trame(trame_proc: Popen):
     trame_proc.terminate()
 
 def get_address():
-    command = """grep -o 'https://.*\.trycloudflare.com' nohup.out | head -n 1 | xargs -I {} echo "{}" > address.txt"""
-    os.system(command)
-    with open("address.txt") as f:
-        address = f.read()
-
+    with open("nohup.out") as f:
+        for line in f:
+            if "https" in line and "trycloudflare.com" in line:
+                address = line.rpartition("INF")[-1].replace("|","").strip()
+                break
+    
     return address
 
 def main():
