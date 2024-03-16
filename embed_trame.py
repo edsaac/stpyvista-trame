@@ -21,7 +21,7 @@ def launch_trame(path_script: str):
     
     ip, _ = get_server_ip()
 
-    command = f"/home/adminuser/venv/bin/python {path_script} --port 1234 --host {ip:!s}"
+    command = f"/home/adminuser/venv/bin/python {path_script} --port 1234 --host {ip}"
     args = shlex.split(command)
     p = Popen(args)
 
