@@ -40,5 +40,9 @@ def main():
     st.components.v1.iframe(f"http://{ip}:1234", height=400)
     # trame_component()
 
+    if st.button("Reset trame"):
+        p.terminate()
+        st.rerun(0)
+
 if __name__ == "__main__":
     main()
