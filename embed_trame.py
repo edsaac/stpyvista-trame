@@ -2,7 +2,6 @@ import streamlit as st
 import shlex
 from subprocess import Popen
 import atexit
-import streamlit.components.v1 as components
 import socket
 
 def launch_trame(path_script: str):
@@ -13,10 +12,6 @@ def launch_trame(path_script: str):
     args = shlex.split(command)
     p = Popen(args)
 
-    trame_component = components.declare_component(
-        "trame_component",
-        url="http://localhost:1234"
-    )
     return p
 
 
@@ -30,8 +25,6 @@ def main():
     st.title("Trame within streamlit")
 
     "### Python `socket` (?)"
-with st.echo():
-
     s = socket.socket(
         family = socket.AF_INET,    # (host, port)
         type = socket.SOCK_DGRAM )
@@ -47,8 +40,8 @@ with st.echo():
     p = launch_trame("trame_example/solution_cone.py")
     atexit.register(close_trame, p)
 
-    # st.components.v1.iframe("http://localhost:1234", height=400)
-    trame_component()
+    st.components.v1.iframe("http://localhost:1234", height=400)
+    # trame_component()
 
 if __name__ == "__main__":
     main()
