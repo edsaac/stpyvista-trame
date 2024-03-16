@@ -15,7 +15,9 @@ def run_cloudflared():
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
-    while True:
+    address = "not_found"
+    
+    for _ in range(50):
         line = p.stdout.readline()
         if "https" in line and "trycloudflare.com" in line:
             address = line.rpartition("INF")[-1].replace("|","").strip()
