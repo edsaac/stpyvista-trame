@@ -1,0 +1,9 @@
+pip
+streamlit
+numpy
+matplotlib
+pyvista
+requests
+trame
+trame-vuetify
+trame-vtk
