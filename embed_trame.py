@@ -1,8 +1,14 @@
 import streamlit as st
 import shlex
-from subprocess import Popen
+from subprocess import Popen, check_output
 import atexit
 import socket
+
+def show_config():
+    command = "/home/adminuser/venv/bin/streamlit config show"
+    args = shlex.split(command)
+    output = check_output(args, text=True)
+    print(output)
 
 def get_server_ip():
 
@@ -31,7 +37,7 @@ def close_trame(p: Popen):
 
 
 def main():
-
+    show_config()
     st.title("Trame within streamlit")
     ip, _ = get_server_ip()
     p = launch_trame("trame_example/solution_cone.py", ip)
