@@ -11,10 +11,17 @@ if not CLOUDFARE_PATH.exists():
     os.system("chmod +x cloudflared-linux-amd64")
 
 def run_cloudflared():
-    command = "nohup ./cloudflared-linux-amd64 tunnel --url http://localhost:12345 &"
+    command = "./cloudflared-linux-amd64 tunnel --url http://localhost:12345"
     args = shlex.split(command)
-    p = Popen(args)
-    return p
+    p = Popen(args, stdout=PIPE, stderr=PIPE)
+    
+    while True:
+        line = p.stdout.readline()
+        if "https" in line and "trycloudflare.com" in line:
+            address = line.rpartition("INF")[-1].replace("|","").strip()
+            break
+        
+    return address
 
 def launch_trame(path_script: str):
     command = f"""/home/adminuser/venv/bin/python {path_script} --port 12345"""
@@ -26,14 +33,7 @@ def close_trame(trame_proc: Popen):
     print("Closing trame")
     trame_proc.terminate()
 
-def get_address():
-    with open("nohup.out") as f:
-        for line in f:
-            if "https" in line and "trycloudflare.com" in line:
-                address = line.rpartition("INF")[-1].replace("|","").strip()
-                break
-    
-    return address
+
 
 def main():
     # st.code(show_config())
@@ -43,13 +43,12 @@ def main():
     atexit.register(close_trame, p)
         
     if "cloudfared_running" not in st.session_state:
-        run_cloudflared()
+        address = run_cloudflared()
         st.session_state.cloudfared_running = True
     
 
-    adresss = get_address()
-    st.write(adresss)
-    st.components.v1.iframe(adresss, height=400)
+    st.write(address)
+    st.components.v1.iframe(address, height=400)
 
     # if st.button("Reset trame"):
     #     p.terminate()
