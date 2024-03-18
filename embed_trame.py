@@ -4,6 +4,9 @@ from subprocess import Popen, PIPE
 import atexit
 import os
 from pathlib import Path
+from collections import namedtuple
+
+CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 
 IN_COMMUNITY_CLOUD = True
 
@@ -34,7 +37,7 @@ def launch_cloudflared(dummy:str = "cloud"):
             address = line.rpartition("INF")[-1].replace("|","").strip()
             break
         
-    return p, address
+    return CF_Connection(p, address)
 
 def launch_trame(path_script: str):
     command = f"""{PYCOMMAND} {path_script} --port 12345"""
@@ -55,18 +58,19 @@ def close_cloudflared(p_cloudflared: Popen):
 def main():
     st.title("Trame within streamlit")
     
-    if "cloudfared_running" not in st.session_state:
-        p_cloudflared, address = launch_cloudflared()
-        atexit.register(close_cloudflared, p_cloudflared)
-        st.session_state.cloudfared_running = p_cloudflared
+    if "cloudfared" not in st.session_state:
+        cloudflared = launch_cloudflared()
+        atexit.register(close_cloudflared, cloudflared.process)
+        st.session_state.cloudfared = cloudflared
+        
 
     if "trame_running" not in st.session_state:
         p_trame = launch_trame("trame_example/solution_cone.py")
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
     
-    st.write(address)
-    st.components.v1.iframe(address, height=400)
+    st.write(st.session_state.cloudflared.address)
+    st.components.v1.iframe(cloudflared.address, height=400)
 
     # if st.button("Reset trame"):
     #     p.terminate()
