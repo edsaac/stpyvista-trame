@@ -33,7 +33,7 @@ def launch_cloudflared(dummy:str = "cloud"):
     for _ in range(50):
         line = p.stderr.readline()
         print(line)
-        if "https" in line and "trycloudflare.com" in line:
+        if "https" in line and ".trycloudflare.com" in line:
             address = line.rpartition("INF")[-1].replace("|","").strip()
             break
         
@@ -53,15 +53,15 @@ def close_trame(p_trame: Popen):
 def close_cloudflared(p_cloudflared: Popen):
     print("Closing cloudflared")
     p_cloudflared.terminate()
-    del st.session_state.cloudfared_running
+    del st.session_state.cloudfared
 
 def main():
     st.title("Trame within streamlit")
     
-    if "cloudfared" not in st.session_state:
+    if "cloudflared" not in st.session_state:
         cloudflared = launch_cloudflared()
         atexit.register(close_cloudflared, cloudflared.process)
-        st.session_state.cloudfared = cloudflared
+        st.session_state.cloudflared = cloudflared
         
 
     if "trame_running" not in st.session_state:
