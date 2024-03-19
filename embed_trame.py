@@ -8,7 +8,7 @@ from collections import namedtuple
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 
-IN_COMMUNITY_CLOUD = True
+IN_COMMUNITY_CLOUD = False
 
 CLOUDFARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
@@ -43,6 +43,7 @@ def launch_trame(path_script: str):
     command = f"""{PYCOMMAND} {path_script} --port 12345"""
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
+    
     return p
 
 def close_trame(p_trame: Popen):
@@ -65,12 +66,13 @@ def main():
         
 
     if "trame_running" not in st.session_state:
-        p_trame = launch_trame("trame_example/solution_cone.py")
+        p_trame = launch_trame("trame_example/grand_canyon.py")
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
     
-    st.write(st.session_state.cloudflared.address)
-    st.components.v1.iframe(cloudflared.address, height=400)
+    # st.write(st.session_state.cloudflared.address)
+    st.components.v1.iframe(cloudflared.address, height=450)
+
 
     # if st.button("Reset trame"):
     #     p.terminate()
