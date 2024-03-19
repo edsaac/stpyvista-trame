@@ -78,7 +78,7 @@ def main():
     
 
     st.write(st.session_state.cloudflared.address)
-    st.components.v1.iframe(cloudflared.address, height=400)
+    st.components.v1.iframe(st.session_state.cloudflared.address, height=400)
 
     if st.button("Reset trame"):
         st.session_state.cloudflared.process.terminate()
