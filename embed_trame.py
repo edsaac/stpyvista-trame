@@ -126,7 +126,7 @@ def main():
 
             if run_command:
                 task = check_output(
-                    ["bash", f"\"{quick_command}\""], text=True, stderr=STDOUT
+                    ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
                 )
                 st.code(task)
 
