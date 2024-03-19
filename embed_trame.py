@@ -8,7 +8,7 @@ from collections import namedtuple
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 
-IN_COMMUNITY_CLOUD = False
+IN_COMMUNITY_CLOUD = True
 
 CLOUDFARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
