@@ -70,7 +70,7 @@ def main():
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
 
-        for _ in range(20)
+        for _ in range(20):
             print(p_trame.stderr.readline())
     
     sleep(5)
