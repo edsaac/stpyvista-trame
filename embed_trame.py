@@ -110,7 +110,7 @@ def main():
     st.components.v1.iframe(address, height=580)
     
 
-    if CONTROL_PANEL":
+    if CONTROL_PANEL:
         with st.sidebar:
             if (
                 st.text_input("Controls", type="password", label_visibility="collapsed")
