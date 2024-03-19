@@ -13,16 +13,16 @@ PORT = 12444
 IN_COMMUNITY_CLOUD = True
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
-CLOUDFARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
+CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
 TRAME_APP_PATH = "./trame_example/grand_canyon.py"
 
 if not Path("./cloudflared").exists():
     os.system("mkdir cloudflared")
     st.rerun()
 
-if not CLOUDFARED_PATH.exists():
-    os.system(f"wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O {CLOUDFARED_PATH}")
-    os.system(f"chmod 777 {CLOUDFARED_PATH}")
+if not CLOUDFLARED_PATH.exists():
+    os.system(f"wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O {CLOUDFLARED_PATH}")
+    os.system(f"chmod 777 {CLOUDFLARED_PATH}")
     st.rerun()
 
 @st.cache_resource
@@ -59,7 +59,7 @@ def close_cloudflared(p_cloudflared: Popen):
     print("Closing cloudflared")
     p_cloudflared.terminate()
     st.cache_resource.clear()
-    del st.session_state.cloudfared
+    del st.session_state.cloudflared
 
 def main():
     st.title("Trame within streamlit")
@@ -85,7 +85,7 @@ def main():
         st.session_state.cloudflared.process.terminate()
         st.session_state.trame_running.terminate()
         del st.session_state.trame_running
-        del st.session_state.cloudfared
+        del st.session_state.cloudflared
         st.cache_resource.clear()
         st.rerun()
         
