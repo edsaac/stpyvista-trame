@@ -8,11 +8,13 @@ from collections import namedtuple
 from time import sleep
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
+PORT = 12444
 
 IN_COMMUNITY_CLOUD = True
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
 CLOUDFARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
+TRAME_APP_PATH = "./trame_example/grand_canyon.py"
 
 if not Path("./cloudflared").exists():
     os.system("mkdir cloudflared")
@@ -25,11 +27,12 @@ if not CLOUDFARED_PATH.exists():
 
 @st.cache_resource
 def launch_cloudflared(dummy:str = "cloud"):
-    command = "./cloudflared/cloudflared-linux-amd64 tunnel --url http://localhost:12345"
+    command = f"./cloudflared/cloudflared-linux-amd64 tunnel --url http://localhost:{PORT}"
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
     address = "not_found"
+    sleep(2)
     
     for _ in range(50):
         line = p.stderr.readline()
@@ -41,7 +44,7 @@ def launch_cloudflared(dummy:str = "cloud"):
     return CF_Connection(p, address)
 
 def launch_trame(path_script: str):
-    command = f"""{PYCOMMAND} {path_script} --server --port 12345"""
+    command = f"""{PYCOMMAND} {path_script} --server --port {PORT}"""
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
@@ -66,14 +69,13 @@ def main():
         st.session_state.cloudflared = cloudflared
     
     if "trame_running" not in st.session_state:
-        p_trame = launch_trame("./trame_example/grand_canyon.py")
+        p_trame = launch_trame(TRAME_APP_PATH)
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
 
         for _ in range(20):
             print(p_trame.stderr.readline())
     
-    sleep(5)
 
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(cloudflared.address, height=400)
