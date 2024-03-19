@@ -13,6 +13,7 @@ PORT = 17007
 
 IN_COMMUNITY_CLOUD = True
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
+CONTROL_PANEL = False
 
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
 TRAME_APP_PATH = "./trame_example/grand_canyon.py"
@@ -107,28 +108,30 @@ def main():
 
     address = st.session_state.cloudflared.address
     st.components.v1.iframe(address, height=580)
+    
 
-    with st.sidebar:
-        if (
-            st.text_input("Controls", type="password", label_visibility="collapsed")
-            == st.secrets.control_panel
-        ):
-            st.info(f"Running on {address}")
+    if CONTROL_PANEL":
+        with st.sidebar:
+            if (
+                st.text_input("Controls", type="password", label_visibility="collapsed")
+                == st.secrets.control_panel
+            ):
+                st.info(f"Running on {address}")
 
-            if st.button("Reset cloudflared", on_click=st.cache_resource.clear):
-                close_all(
-                    st.session_state.trame_running, st.session_state.cloudflared.process
-                )
+                if st.button("Reset cloudflared", on_click=st.cache_resource.clear):
+                    close_all(
+                        st.session_state.trame_running, st.session_state.cloudflared.process
+                    )
 
-            with st.form("Run commands"):
-                quick_command = st.text_area("Command")
-                run_command = st.form_submit_button("Run")
+                with st.form("Run commands"):
+                    quick_command = st.text_area("Command")
+                    run_command = st.form_submit_button("Run")
 
-            if run_command:
-                task = check_output(
-                    ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
-                )
-                st.code(task)
+                if run_command:
+                    task = check_output(
+                        ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
+                    )
+                    st.code(task)
 
 
 if __name__ == "__main__":
