@@ -46,11 +46,11 @@ def launch_cloudflared(dummy:str = "cloud"):
 @st.cache_resource
 def launch_trame(path_script: str):
     command = f"""{PYCOMMAND} -u {path_script} --server --port {PORT} &"""
-    os.system(command)
-    # args = shlex.split(command)
-    # p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
+    # os.system(command)
+    args = shlex.split(command)
+    p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
-    return "It is running..."
+    return p
 
 def close_all(p_trame: Popen, p_cloudflared: Popen):
     close_trame(p_trame)
@@ -59,7 +59,7 @@ def close_all(p_trame: Popen, p_cloudflared: Popen):
 
 def close_trame(p_trame: Popen):
     print("Closing trame")
-    # p_trame.terminate()
+    p_trame.terminate()
     del st.session_state.trame_running
 
 def close_cloudflared(p_cloudflared: Popen):
