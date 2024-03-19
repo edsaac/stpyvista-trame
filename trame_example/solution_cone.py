@@ -1,6 +1,6 @@
 from trame.app import get_server
 from trame.ui.vuetify import SinglePageLayout
-from trame.widgets import vtk, vuetify
+from trame.widgets import vtk, vuetify, client, html
 
 from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkRenderingCore import (
@@ -49,8 +49,18 @@ ctrl = server.controller
 
 with SinglePageLayout(server) as layout:
     layout.title.set_text("Hello trame")
-
+    with  layout.toolbar:
+        with vuetify.VBtn(click=ctrl.swap) as btn:
+                    vuetify.VIcon("mdi-invert-colors", classes="mr-1 title")
+                    btn.add_child("Swap")
+                    
     with layout.content:
+        html.Img(src="https://picsum.photos/300/300")
+        js = """console.log("Hello from here")"""
+        # html.Script(js, type="text/javascript")
+        ctrl.swap = client.JSEval(exec=js).exec
+
+
         with vuetify.VContainer(
             fluid=True,
             classes="pa-0 fill-height",
