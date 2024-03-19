@@ -5,6 +5,7 @@ import atexit
 import os
 from pathlib import Path
 from collections import namedtuple
+from time import sleep
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 
@@ -63,16 +64,16 @@ def main():
         cloudflared = launch_cloudflared()
         atexit.register(close_cloudflared, cloudflared.process)
         st.session_state.cloudflared = cloudflared
-        
-
+    
     if "trame_running" not in st.session_state:
         p_trame = launch_trame("trame_example/grand_canyon.py")
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
     
+    sleep(2)
+
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(cloudflared.address, height=400)
-
 
     # if st.button("Reset trame"):
     #     p.terminate()
