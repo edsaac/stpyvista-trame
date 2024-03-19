@@ -5,6 +5,10 @@ matplotlib
 pyvista
 requests
 trame
-trame-vuetify
+trame-client
+trame-components
+trame-plotly
+trame-server
 trame-vtk
+trame-vuetify
 rasterio
