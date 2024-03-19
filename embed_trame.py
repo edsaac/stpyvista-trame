@@ -8,9 +8,9 @@ from collections import namedtuple
 from time import sleep
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
-PORT = 12444
+PORT = 8080
 
-IN_COMMUNITY_CLOUD = True
+IN_COMMUNITY_CLOUD = False
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
@@ -45,7 +45,7 @@ def launch_cloudflared(dummy:str = "cloud"):
 
 @st.cache_resource
 def launch_trame(path_script: str):
-    command = f"""{PYCOMMAND} {path_script} --server --port {PORT}"""
+    command = f"""{PYCOMMAND} -u {path_script} --server --port {PORT}"""
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
@@ -69,28 +69,21 @@ def close_cloudflared(p_cloudflared: Popen):
 def main():
     st.title("Trame within streamlit")
     
-    if "cloudflared" not in st.session_state:
-        cloudflared = launch_cloudflared()
-        atexit.register(close_cloudflared, cloudflared.process)
-        st.session_state.cloudflared = cloudflared
-    
     if "trame_running" not in st.session_state:
         p_trame = launch_trame(TRAME_APP_PATH)
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
 
-        # for _ in range(20):
-        #     st.sidebar.text(p_trame.stdout.readline())
-        
-        # for _ in range(20):
-        #     st.sidebar.text(p_trame.stderr.readline())
+    if "cloudflared" not in st.session_state:
+        cloudflared = launch_cloudflared()
+        atexit.register(close_cloudflared, cloudflared.process)
+        st.session_state.cloudflared = cloudflared
 
-    st.components.v1.iframe(st.session_state.cloudflared.address, height=400)
+    st.write(address := st.session_state.cloudflared.address)
+    st.components.v1.iframe(address, height=400)
 
-    if not IN_COMMUNITY_CLOUD:
-        st.write(st.session_state.cloudflared.address)
-        if st.button("Reset trame", on_click=st.cache_resource.clear):
-            close_all(st.session_state.cloudflared.process, st.session_state.trame_running)
+    if st.button("Reset trame", on_click=st.cache_resource.clear):
+        close_all(st.session_state.cloudflared.process, st.session_state.trame_running)
         
 
 if __name__ == "__main__":

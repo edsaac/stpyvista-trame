@@ -126,7 +126,7 @@ with SinglePageWithDrawerLayout(server, show_drawer=False, width="15%") as layou
             html.Span("Show or hide the mesh")
 
     with layout.content:
-        view = vtk.VtkLocalView(pl.ren_win)  ## Fails for lut cmap
+        view = vtk.VtkLocalView(pl.ren_win)
         ctrl.view_update = view.update
         
 
