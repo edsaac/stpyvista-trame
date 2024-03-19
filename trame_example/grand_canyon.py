@@ -13,6 +13,8 @@ import numpy as np
 pv.OFF_SCREEN = True
 PATH_TO_DEM = "trame_example/clipped_colorado.tif"
 
+pv.start_xvfb()
+
 def create_plotter():
 
     with rasterio.open(PATH_TO_DEM) as im:
