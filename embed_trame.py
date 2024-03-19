@@ -70,8 +70,8 @@ def main():
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
     
-    # st.write(st.session_state.cloudflared.address)
-    st.components.v1.iframe(cloudflared.address, height=450)
+    st.write(st.session_state.cloudflared.address)
+    st.components.v1.iframe(cloudflared.address, height=400)
 
 
     # if st.button("Reset trame"):
