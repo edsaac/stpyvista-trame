@@ -15,8 +15,8 @@ PATH_TO_DEM = "trame_example/clipped_colorado.tif"
 
 pv.start_xvfb()
 
-def create_plotter():
 
+def create_plotter():
     with rasterio.open(PATH_TO_DEM) as im:
         elevation = im.read(1)  ## Assuming data in first band
         width = im.width
@@ -31,12 +31,7 @@ def create_plotter():
 
     print(f"{np.min(elevation)}, {np.max(elevation)}")
     # Generate surface
-    surface = (
-        pv.StructuredGrid(xx, yy, z)
-        .triangulate()
-        .extract_surface()
-        .smooth()
-    )
+    surface = pv.StructuredGrid(xx, yy, z).triangulate().extract_surface().smooth()
 
     surface["elevation"] = elevation.T.flatten()
     warped = surface.warp_by_scalar("elevation", factor=0.05)
@@ -58,12 +53,14 @@ def create_plotter():
 
     return plotter
 
-server = get_server(client_type = "vue2")
+
+server = get_server(client_type="vue2")
 state, ctrl = server.state, server.controller
 
 pl = create_plotter()
 actor = pl.actors["colorado"]
 lut = actor.mapper.lookup_table
+
 
 # When color change, execute fn
 @state.change("color")
@@ -71,10 +68,12 @@ def bg_color(color, **kwargs):
     pl.set_background(color)
     ctrl.view_update()
 
+
 @state.change("visible")
 def mesh_visible(visible, **kwargs):
     actor.visibility = visible
     ctrl.view_update()
+
 
 @state.change("colormap")
 def change_colormap(colormap, **kwargs):
@@ -83,14 +82,14 @@ def change_colormap(colormap, **kwargs):
 
 
 with SinglePageWithDrawerLayout(server, show_drawer=False, width="15%") as layout:
-# with SinglePageLayout(server, toolbar_title="🌄 Grand Canyon") as layout:
-    
+    # with SinglePageLayout(server, toolbar_title="🌄 Grand Canyon") as layout:
+
     layout.title.set_text("🌄 Grand Canyon")
 
     with layout.drawer:
         with vuetify.VTooltip(right=True):
-            with vuetify.Template(v_slot_activator='{ on, attrs }'):
-                with html.Div(v_on='on', v_bind='attrs'):   
+            with vuetify.Template(v_slot_activator="{ on, attrs }"):
+                with html.Div(v_on="on", v_bind="attrs"):
                     vuetify.VColorPicker(
                         label="Background color",
                         v_model=("color", "#dddddd"),
@@ -99,14 +98,32 @@ with SinglePageWithDrawerLayout(server, show_drawer=False, width="15%") as layou
                     )
             html.Span("Change background")
 
-
     with layout.toolbar:
         vuetify.VSpacer()
-        
+
+        list_of_cmaps = [
+            "viridis",
+            "terrain",
+            "gist_earth",
+            "coolwarm",
+            "prism",
+            "cubehelix",
+            "hsv",
+            "twilight",
+            "bone",
+            "spring",
+            "summer",
+            "autumn",
+            "winter",
+            "cool",
+            "hot",
+            "copper",
+        ]
+
         vuetify.VSelect(
             label="Colormap",
-            v_model=("colormap", "terrain"),
-            items=("array_list", ["viridis", "terrain", "coolwarm"]),
+            v_model=("colormap", "gist_earth"),
+            items=("array_list", list_of_cmaps),
             hide_details=True,
             dense=True,
             outlined=True,
@@ -116,8 +133,8 @@ with SinglePageWithDrawerLayout(server, show_drawer=False, width="15%") as layou
         vuetify.VSpacer()
 
         with vuetify.VTooltip(bottom=True):
-            with vuetify.Template(v_slot_activator='{ on, attrs }'):
-                with html.Div(v_on='on', v_bind='attrs'):
+            with vuetify.Template(v_slot_activator="{ on, attrs }"):
+                with html.Div(v_on="on", v_bind="attrs"):
                     vuetify.VCheckbox(
                         label="Show model",
                         v_model=("visible", True),
@@ -130,7 +147,7 @@ with SinglePageWithDrawerLayout(server, show_drawer=False, width="15%") as layou
     with layout.content:
         view = vtk.VtkLocalView(pl.ren_win)
         ctrl.view_update = view.update
-        
+
 
 if __name__ == "__main__":
     server.start(open_browser=False, show_connection_info=True)
