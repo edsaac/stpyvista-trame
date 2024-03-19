@@ -49,7 +49,6 @@ def create_plotter():
         show_edges=False,
         name="colorado",
         show_scalar_bar=False,
-        clim=(850, 2000)
     )
 
     # Zooming and camera configs

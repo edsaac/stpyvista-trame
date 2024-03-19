@@ -10,9 +10,9 @@ from time import sleep
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 
 IN_COMMUNITY_CLOUD = True
+PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
 CLOUDFARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
-PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
 if not Path("./cloudflared").exists():
     os.system("mkdir cloudflared")
@@ -41,7 +41,7 @@ def launch_cloudflared(dummy:str = "cloud"):
     return CF_Connection(p, address)
 
 def launch_trame(path_script: str):
-    command = f"""{PYCOMMAND} {path_script} --port 12345"""
+    command = f"""{PYCOMMAND} {path_script} --server --port 12345"""
     args = shlex.split(command)
     p = Popen(args, stdout=PIPE, stderr=PIPE, text=True)
     
