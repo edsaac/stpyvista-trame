@@ -79,11 +79,11 @@ def main():
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
 
-        for _ in range(20):
-            st.sidebar.text(p_trame.stdout.readline())
+        # for _ in range(20):
+        #     st.sidebar.text(p_trame.stdout.readline())
         
-        for _ in range(20):
-            st.sidebar.text(p_trame.stderr.readline())
+        # for _ in range(20):
+        #     st.sidebar.text(p_trame.stderr.readline())
 
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(st.session_state.cloudflared.address, height=400)
