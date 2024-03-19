@@ -84,7 +84,7 @@ def main():
     st.components.v1.iframe(address, height=400)
 
     if st.button("Reset cloudflared", on_click=st.cache_resource.clear):
-        close_all(st.session_state.cloudflared.process, st.session_state.trame_running)
+        close_all( st.session_state.trame_running, st.session_state.cloudflared.process)
         
 
 if __name__ == "__main__":
