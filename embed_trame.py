@@ -10,7 +10,7 @@ from time import sleep
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
 PORT = 17007
 
-IN_COMMUNITY_CLOUD = False
+IN_COMMUNITY_CLOUD = True
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
 
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
