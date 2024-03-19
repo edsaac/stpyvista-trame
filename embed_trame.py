@@ -85,11 +85,12 @@ def main():
         # for _ in range(20):
         #     st.sidebar.text(p_trame.stderr.readline())
 
-    st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(st.session_state.cloudflared.address, height=400)
 
-    if st.button("Reset trame", on_click=st.cache_resource.clear):
-        close_all(st.session_state.cloudflared.process, st.session_state.trame_running)
+    if not IN_COMMUNITY_CLOUD:
+        st.write(st.session_state.cloudflared.address)
+        if st.button("Reset trame", on_click=st.cache_resource.clear):
+            close_all(st.session_state.cloudflared.process, st.session_state.trame_running)
         
 
 if __name__ == "__main__":
