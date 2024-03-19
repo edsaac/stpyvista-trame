@@ -58,6 +58,7 @@ def close_trame(p_trame: Popen):
 def close_cloudflared(p_cloudflared: Popen):
     print("Closing cloudflared")
     p_cloudflared.terminate()
+    st.cache_resource.clear()
     del st.session_state.cloudfared
 
 def main():
@@ -80,12 +81,13 @@ def main():
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(st.session_state.cloudflared.address, height=400)
 
-    # if st.button("Reset trame"):
-    #     st.session_state.cloudflared.process.terminate()
-    #     st.session_state.trame_running.terminate()
-    #     del st.session_state.trame_running
-    #     del st.session_state.cloudfared
-    #     st.rerun()
+    if st.button("Reset trame"):
+        st.session_state.cloudflared.process.terminate()
+        st.session_state.trame_running.terminate()
+        del st.session_state.trame_running
+        del st.session_state.cloudfared
+        st.cache_resource.clear()
+        st.rerun()
         
 
 if __name__ == "__main__":
