@@ -7,3 +7,4 @@ requests
 trame
 trame-vuetify
 trame-vtk
+rasterio
