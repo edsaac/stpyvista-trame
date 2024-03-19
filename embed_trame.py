@@ -66,11 +66,14 @@ def main():
         st.session_state.cloudflared = cloudflared
     
     if "trame_running" not in st.session_state:
-        p_trame = launch_trame("trame_example/grand_canyon.py")
+        p_trame = launch_trame("./trame_example/grand_canyon.py")
         atexit.register(close_trame, p_trame)
         st.session_state.trame_running = p_trame
+
+        for _ in range(20)
+            print(p_trame.stderr.readline())
     
-    sleep(2)
+    sleep(5)
 
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(cloudflared.address, height=400)
