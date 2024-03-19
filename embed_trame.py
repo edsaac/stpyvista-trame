@@ -8,7 +8,7 @@ from collections import namedtuple
 from time import sleep
 
 CF_Connection = namedtuple("CF_Connection", ["process", "address"])
-PORT = 8080
+PORT = 17007
 
 IN_COMMUNITY_CLOUD = False
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
