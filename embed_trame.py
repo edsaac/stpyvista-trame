@@ -80,9 +80,11 @@ def main():
     st.write(st.session_state.cloudflared.address)
     st.components.v1.iframe(cloudflared.address, height=400)
 
-    # if st.button("Reset trame"):
-    #     p.terminate()
-    #     st.rerun()
+    if st.button("Reset trame"):
+        close_cloudflared(st.session_state.cloudflared.process)
+        close_trame(st.session_state.trame_running)
+        st.rerun()
+        
 
 if __name__ == "__main__":
     main()
