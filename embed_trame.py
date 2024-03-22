@@ -13,7 +13,7 @@ PORT = 17007
 
 IN_COMMUNITY_CLOUD = True
 PYCOMMAND = "/home/adminuser/venv/bin/python" if IN_COMMUNITY_CLOUD else "python"
-CONTROL_PANEL = False
+CONTROL_PANEL = True
 
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
 TRAME_APP_PATH = "./trame_example/grand_canyon.py"
