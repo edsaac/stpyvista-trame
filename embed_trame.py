@@ -5,6 +5,7 @@ import asyncio
 import streamlit as st 
 from streamlit.components.v1 import declare_component
 import nest_asyncio
+import threading
 
 from trame.app import get_server
 from trame.ui.vuetify import SinglePageLayout
@@ -57,7 +58,7 @@ class TrameApp:
             ctrl.swap = client.JSEval(exec=js).exec
             trame.ClientTriggers(mounted=ctrl.swap)
 
-    async def run(self):
+    async def async_run(self):
         
         if not self.server.running:
             self.cor = self.server.start(
@@ -65,7 +66,6 @@ class TrameApp:
                 open_browser=False,
                 thread=True,
                 show_connection_info=True,
-                # exec_mode="task",
                 exec_mode="coroutine",
                 disable_logging=True,
                 timeout=0,
@@ -79,8 +79,13 @@ class TrameApp:
 
         await self.server.ready
 
+    def run(self):
+        new_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(new_loop)
+        new_loop.run_until_complete(self.async_run())
+        return
 
-async def main():
+def main():
 
     st_trame = declare_component("trame", url="http://localhost:12346")
     st.title("streamlit-trame")
@@ -94,7 +99,7 @@ async def main():
     st_trame(key="my_trame")
     print("Create component")    
 
-    asyncio.run(tmap.run())
+    threading.Thread(target=tmap.run).start()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
