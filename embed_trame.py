@@ -62,7 +62,7 @@ class TrameApp:
         
         if not self.server.running:
             self.cor = self.server.start(
-                port=59392,
+                port=3001,
                 open_browser=False,
                 thread=True,
                 show_connection_info=True,
@@ -87,7 +87,7 @@ class TrameApp:
 
 def main():
 
-    st_trame = declare_component("trame", url="http://localhost:59392")
+    st_trame = declare_component("trame", url="http://localhost:3001")
     st.title("streamlit-trame")
     
     pl = basic_plotter()
