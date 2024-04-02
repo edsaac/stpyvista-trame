@@ -1,6 +1,6 @@
 from trame.app import get_server
 from trame.ui.vuetify import SinglePageLayout
-from trame.widgets import vtk, vuetify, client, html, trame
+from trame.widgets import vtk, vuetify, client, trame
 
 from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkRenderingCore import (
@@ -49,30 +49,31 @@ ctrl = server.controller
 
 with SinglePageLayout(server) as layout:
     layout.title.set_text("Hello trame")
-    
-    with layout.footer:
-        js = """console.log("Hello from here")"""
-        ctrl.swap = client.JSEval(exec=js).exec
-        
-        with vuetify.VBtn(click=ctrl.swap) as btn:
-            vuetify.VIcon("mdi-invert-colors", classes="mr-1 title")
-            btn.add_child("Hehe")
 
-    # with html.Script(type="text/javascript"):
-                    
     with layout.content:
-        # html.Img(src="https://picsum.photos/300/300")
-
         with vuetify.VContainer(
             fluid=True,
             classes="pa-0 fill-height",
         ):
             view = vtk.VtkLocalView(renderWindow)
+    
+    with layout.footer:
+        js_t = "console.log('First message!');"
+        
+        with open("./streamlit-component-lib.js") as f1, open("./main.js") as f2:
+            js = js_t + f1.read() + f2.read()
 
-
+            # client.JSEval(exec=js).exec()
+        ctrl.swap = client.JSEval(exec=js).exec
+        
+        # with vuetify.VBtn(click=ctrl.swap) as btn:
+        #     vuetify.VIcon("mdi-invert-colors", classes="mr-1 title")
+        #     btn.add_child("Hehe")
+        
+        trame.ClientTriggers(mounted=ctrl.swap)
 # -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    server.start(open_browser=False, show_connection_info=True)
+    server.start()
