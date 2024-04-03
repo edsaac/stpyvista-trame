@@ -2,9 +2,11 @@ import os
 import streamlit as st
 from pathlib import Path
 from time import sleep
+from subprocess import check_output, STDOUT
 
 PORT = 12346
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
+CONTROL_PANEL=True
 
 in_community_cloud = True
 python_executable = "/home/adminuser/venv/bin/python" if in_community_cloud else "python"
@@ -82,6 +84,24 @@ def main():
     address = initialize_server()
     st.components.v1.iframe(address, height=580)
 
-    
+    if CONTROL_PANEL:
+        with st.sidebar:
+            if (
+                st.text_input("Controls", type="password", label_visibility="collapsed")
+                == st.secrets.control_panel
+            ):
+                st.info(f"Running on {address}")
+
+                with st.form("Run commands"):
+                    quick_command = st.text_area("Command")
+                    run_command = st.form_submit_button("Run")
+
+                if run_command:
+                    task = check_output(
+                        ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
+                    )
+                    st.code(task)
+
+
 if __name__ == "__main__":
     main()

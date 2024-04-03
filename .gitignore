@@ -162,3 +162,4 @@ cython_debug/
 .streamlit/secrets.toml
 .ignore
 cloudflared
+sentinel.txt
