@@ -3,6 +3,7 @@ import streamlit as st
 from pathlib import Path
 from time import sleep
 from subprocess import check_output, STDOUT
+# import shlex
 
 PORT = 12346
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
@@ -98,7 +99,8 @@ def main():
 
                 if run_command:
                     task = check_output(
-                        ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
+                        # ["bash", "-c", f"\"{quick_command}\""], text=True, stderr=STDOUT
+                        f"bash -c \"{quick_command}\"", text=True, stderr=STDOUT, shell=True
                     )
                     st.code(task)
 
