@@ -93,6 +93,10 @@ def main():
             ):
                 st.info(f"Running on {address}")
 
+                if st.button("Clear cache"):
+                    st.cache_resource.clear()
+                    st.rerun()
+                
                 with st.form("Run commands"):
                     quick_command = st.text_area("Command")
                     run_command = st.form_submit_button("Run")
