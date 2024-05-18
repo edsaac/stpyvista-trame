@@ -1,5 +1,7 @@
 import os
 import streamlit as st
+import streamlit.components.v1 as components
+
 from pathlib import Path
 from time import sleep
 from subprocess import check_output, STDOUT
@@ -7,7 +9,7 @@ from subprocess import check_output, STDOUT
 
 PORT = 12346
 CLOUDFLARED_PATH = Path("./cloudflared/cloudflared-linux-amd64")
-CONTROL_PANEL=True
+CONTROL_PANEL= True
 
 in_community_cloud = True
 python_executable = "/home/adminuser/venv/bin/python" if in_community_cloud else "python"
@@ -89,7 +91,7 @@ def main():
 
     st.title("🧇 Trame within streamlit")
     address = initialize_server()
-    st.components.v1.iframe(address, height=580)
+    components.iframe(address, height=580)
 
     if CONTROL_PANEL:
         with st.sidebar:
